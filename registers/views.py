@@ -44,16 +44,19 @@ def task_data():
     i = 0
     while True:
         column_index = request.args.get(f'order[{i}][column]')
+        print(column_index)
         if column_index is None:
             break
 
         column_name = request.args.get(f'columns[{column_index}][data]')
-        if column_name not in ['id', 'subject', 'urgency', 'recipient', 'sender',
+        print(column_name)
+        if column_name not in ['id', 'subject', 'urgency', 'recipient_user', 'sender_user',
                                'date_created', 'date_required', 'date_completed']:
             column_name = 'id'
 
         descending = request.args.get(f'order[{i}][dir]') == 'desc'
         column = getattr(Task, column_name)
+        print(column)
         if descending:
             column = column.desc()
         order.append(column)

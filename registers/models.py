@@ -16,7 +16,6 @@ class User(db.Model):
     #forename = db.Column(db.String(64))
     #surname = db.Column(db.String(64))
     company = db.Column(db.String(100))
-    #full_name = Function("full_name", name_get='name_get', name_set='name_set', name_del='name_del', name_expr='name_expr')
 
     assigned_tasks = db.relationship("Task", primaryjoin=lambda: or_(
         User.id == foreign(Task.sender_id),
@@ -32,21 +31,7 @@ class User(db.Model):
             #'forename' : self.forename,
             #'surname' : self.surname,
             'company' : self.company,
-            #'full_name' : self.full_name
         }
-
-    #def name_get(self):
-    #    return '{0} {1}'.format(self.forename, self.surname)
-
-    #def name_set(self, value):
-    #    self.forename, self.surname = value.split('', 1)
-
-    #def name_del(self):
-    #    self.forename = self.surname = None
-
-    #@classmethod
-    #def name_expr(cls):
-    #    return func.concat(cls.forename, " ", cls.surname)
 
 class Task(db.Model):
     __tablename__ = "task"
