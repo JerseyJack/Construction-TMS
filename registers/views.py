@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request
 from sqlalchemy.orm import aliased
 from sqlalchemy.sql import func, expression
 
-from registers.models import Task, User
+from registers.models import Task, User, init_db, delete_all_rows, create_fake_data
 from app import db
 
 registers = Blueprint('registers', __name__, template_folder='templates')
@@ -13,19 +13,20 @@ def task_register():
 
 # Credit: Miguel Grinberg for tutorial on Flask Data Tables
 # https://blog.miguelgrinberg.com/post/beautiful-interactive-tables-for-your-flask-templates
+
 @registers.route('/api/data')
 def task_data():
+    delete_all_rows()
+    create_fake_data()
     # Query the task table
     recipient_user = aliased(User)
     sender_user = aliased(User)
     query = db.session.query(Task.id, Task.subject, Task.description, Task.urgency,
-                            recipient_user.name,
-                            sender_user.name,
+                            (recipient_user.name).label("recipient"),
+                            (sender_user.name).label("sender"),
                             Task.date_created, Task.date_required,Task.date_completed)\
                             .join(recipient_user, recipient_user.id == Task.recipient_id)\
                             .join(sender_user, sender_user.id == Task.sender_id)
-                            #.filter(recipient_user.id == User.id & sender_user.id == User.id)
-
 
     #Search table
     search = request.args.get('search[value]')
@@ -33,8 +34,8 @@ def task_data():
         query = query.filter(db.or_(
             Task.subject.like(f'%{search}%'),
             Task.urgency.like(f'%{search}%'),
-            #Task.recipient.like(f'%{search}%'),
-            #Task.sender.like(f'%{search}%')
+            recipient_user.name.like(f'%{search}%'),
+            sender_user.name.like(f'%{search}%')
         ))
     total_filtered = query.count()
 
@@ -68,7 +69,7 @@ def task_data():
 
     # Query response
     return {
-        'data' : [task.to_dict() for task in query],
+        'data' : [task._asdict() for task in query.all()],
         'recordsFiltered' : total_filtered,
         'recordsTotal' : Task.query.count(),
         'draw' : request.args.get('draw', type=int)

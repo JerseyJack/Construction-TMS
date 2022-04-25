@@ -76,8 +76,6 @@ class Task(db.Model):
             'date_completed' : self.date_completed
         }
 
-
-
 def random_urgency():
     urgency_number = random.randint(1, 3)
     if (urgency_number == 1):
@@ -101,7 +99,7 @@ def create_fake_users(n):
                     company=faker.company() )
         db.session.add(user)
     db.session.commit()
-    print(f'Added {n} fake tasks to the database.')
+    print(f'Added {n} fake users to the database.')
 
 #Create some fake tasks
 def create_fake_tasks(n):
@@ -120,12 +118,16 @@ def create_fake_tasks(n):
 
 def init_db():
     db.create_all()
-    #create_fake_users(50)
-    #create_fake_tasks(50)
+
+def create_fake_data():
+    create_fake_users(50)
+    create_fake_tasks(50)
 
 def delete_all_rows():
     User.query.delete()
+    print(f'Deleted all users from database.')
     Task.query.delete()
+    print(f'Deleted all tasks from database.')
 
 
 
