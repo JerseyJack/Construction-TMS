@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% set active_page = "Task Register" %}
+{% block content %}
+
+<style>
+    .truncate {
+        max-width:200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+
+<h1>Task Register</h1>
+<br>
+<div style="width:100%">
+    <table id="data" class="table table-striped table-bordered table-hover table-responsive-xxl display nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th>Task ID</th>
+                <th>Subject</th>
+                <th>Description</th>
+                <th>Urgency</th>
+                <th>Recipient</th>
+                <th>Sender</th>
+                <th>Date Created</th>
+                <th>Date Required</th>
+                <th>Date Responded</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function(){
+            $.fn.dataTable.moment( 'DD/MM/YYYY HH:mm' );
+            $('#data').DataTable({
+                columnDefs:[{targets:2,className:"truncate"}],
+                createdRow: function(row) {
+                    var td = $(row).find(".truncate");
+                    td.attr("title", td.html());
+                },
+                ajax: '/api/data',
+                serverSide: true,
+                columns: [
+                    {data:'id'},
+                    {data:'subject'},
+                    {data:'description', orderable:false},
+                    {data:'urgency'},
+                    {data:'recipient'},
+                    {data:'sender'},
+                    {data:'date_created', render: function (data, type, row) {
+                            return moment(new Date(data).toString()).format('DD/MM/YYYY HH:mm');
+                    }},
+                    {data:'date_required', render: function (data, type, row) {
+                            return moment(new Date(data).toString()).format('DD/MM/YYYY HH:mm');
+                    }},
+                    {data:'date_completed'}
+                ],
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% set active_page = "Create Task" %}
+{% block content %}
+
+<h1>Create Task</h1>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul class=flashes>
+            {% for category, message in messages %}
+                <center class="alert alert-{{ category }}">{{ message }}</center>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<div>
+    <form method="post" action="">
+        <div>
+            <div class="d-flex mb-1">
+                <div class="d-flex">
+                    <label class="form-label me-1">Sender: </label>
+                    <select class="form-select" aria-label="Select Sender">
+                        <option selected>Placeholder</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                </div>
+                <div class="d-flex">
+                    <label class="form-label me-1">Recipient: </label>
+                    <select class="form-select" aria-label="Select Sender">
+                        <option selected>Please select...</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                </div>
+            </div>
+            <div class="d-flex mb-1">
+                <label class="form-label me-1">Subject: </label>
+                <input type="subject" class="form-control" id="subject" aria-describedby="subject">
+            </div>
+            <div class="d-flex mb-1">
+                <label class="form-label me-1">Description: </label>
+                <textarea type="description" class="form-control" id="description" aria-describedby="description"></textarea>
+            </div>
+            <div class="d-flex mb-1">
+                <label class="form-label me-1">Urgency: </label>
+                <select class="form-select" aria-label="Select Urgency">
+                    <option selected>Please select...</option>
+                    <option value="1">High</option>
+                    <option value="2">Medium</option>
+                    <option value="3">Low</option>
+                </select>
+            </div>
+            <div class="d-flex mb-1">
+                <div class="d-flex">
+                    <label class="form-label me-1">Date Created: </label>
+                    <input type="date" class="form-control" id="date_created" aria-describedby="date_created">
+                </div>
+                    <label class="form-label me-1">Date Required: </label>
+                    <input type="date" class="form-control" id="date_required" aria-describedby="date_required">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
