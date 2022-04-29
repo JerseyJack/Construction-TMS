@@ -14,53 +14,57 @@
 {% endwith %}
 
 <div>
-    <form method="post" action="">
+    <form method="post" action="{{ url_for('forms.create_task') }}">
         <div>
-            <div class="d-flex mb-1">
-                <div class="d-flex">
-                    <label class="form-label me-1">Sender: </label>
-                    <select class="form-select" aria-label="Select Sender">
-                        <option selected>Placeholder</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                    </select>
-                </div>
-                <div class="d-flex">
-                    <label class="form-label me-1">Recipient: </label>
-                    <select class="form-select" aria-label="Select Sender">
+            <div class="d-flex mb-2">
+                <div class="me-2">
+                    <label class="form-label">Sender: </label>
+                    <select class="form-select" name="sender" aria-label="Select Sender">
                         <option selected>Please select...</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                        {% for user in users %}
+                            <option value="{{user.id}}">{{user.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label">Recipient: </label>
+                    <select class="form-select" name="recipient" aria-label="Select Sender">
+                        <option selected>Please select...</option>
+                        {% for user in users %}
+                            <option value="{{user.id}}">{{user.name}}</option>
+                        {% endfor %}
                     </select>
                 </div>
             </div>
-            <div class="d-flex mb-1">
-                <label class="form-label me-1">Subject: </label>
-                <input type="subject" class="form-control" id="subject" aria-describedby="subject">
+            <div class="mb-2">
+                <label class="form-label">Subject: </label>
+                <input type="subject" class="form-control" name="subject" id="subject" aria-describedby="subject">
             </div>
-            <div class="d-flex mb-1">
-                <label class="form-label me-1">Description: </label>
-                <textarea type="description" class="form-control" id="description" aria-describedby="description"></textarea>
+            <div class="mb-2">
+                <label class="form-label">Description: </label>
+                <textarea type="description" class="form-control" name="description" id="description" aria-describedby="description"></textarea>
             </div>
-            <div class="d-flex mb-1">
-                <label class="form-label me-1">Urgency: </label>
-                <select class="form-select" aria-label="Select Urgency">
+            <div class="mb-2">
+                <label class="form-label">Urgency: </label>
+                <select class="form-select" name="urgency" aria-label="Select Urgency">
                     <option selected>Please select...</option>
-                    <option value="1">High</option>
-                    <option value="2">Medium</option>
-                    <option value="3">Low</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
                 </select>
             </div>
-            <div class="d-flex mb-1">
-                <div class="d-flex">
+            <div class="d-flex mb-2">
+                <div class="me-2">
                     <label class="form-label me-1">Date Created: </label>
-                    <input type="date" class="form-control" id="date_created" aria-describedby="date_created">
+                    <input type="date" class="form-control" name="date_created" id="date_created" aria-describedby="date_created">
                 </div>
+                <div>
                     <label class="form-label me-1">Date Required: </label>
-                    <input type="date" class="form-control" id="date_required" aria-describedby="date_required">
+                    <input type="date" class="form-control" name="date_required" id="date_required" aria-describedby="date_required">
                 </div>
+            </div>
+            <div>
+                <input class="rounded-pill btn btn-primary" type="submit" value="Create Task">
             </div>
         </div>
     </form>

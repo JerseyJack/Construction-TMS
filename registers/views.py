@@ -1,8 +1,6 @@
 from flask import Blueprint, render_template, request
 from sqlalchemy.orm import aliased
-from sqlalchemy.sql import func, expression
-
-from registers.models import Task, User, init_db, delete_all_rows, create_fake_data
+from registers.models import Task, User, delete_all_rows, create_fake_data
 from app import db
 
 registers = Blueprint('registers', __name__, template_folder='templates')
@@ -16,8 +14,10 @@ def task_register():
 
 @registers.route('/api/data')
 def task_data():
-    delete_all_rows()
-    create_fake_data()
+    # Use these when you want to delete all or create new data
+    # delete_all_rows()
+    # create_fake_data()
+
     # Query the task table
     recipient_user = aliased(User)
     sender_user = aliased(User)
@@ -28,7 +28,7 @@ def task_data():
                             .join(recipient_user, recipient_user.id == Task.recipient_id)\
                             .join(sender_user, sender_user.id == Task.sender_id)
 
-    #Search table
+    # Search table
     search = request.args.get('search[value]')
     if search:
         query = query.filter(db.or_(
@@ -50,13 +50,21 @@ def task_data():
 
         column_name = request.args.get(f'columns[{column_index}][data]')
         print(column_name)
-        if column_name not in ['id', 'subject', 'urgency', 'recipient_user', 'sender_user',
+        if column_name not in ['id', 'subject', 'urgency', 'recipient', 'sender',
                                'date_created', 'date_required', 'date_completed']:
             column_name = 'id'
 
         descending = request.args.get(f'order[{i}][dir]') == 'desc'
-        column = getattr(Task, column_name)
+
+        if column_name == 'recipient':
+            column = 'recipient'
+        else:
+            if column_name == 'sender':
+                column = 'sender'
+            else:
+                column = getattr(Task, column_name)
         print(column)
+
         if descending:
             column = column.desc()
         order.append(column)

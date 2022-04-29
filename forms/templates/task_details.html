@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% set active_page = "Task Details" %}
+{% block content %}
+
+<a href="{{ url_for('registers.task_register') }}" class="rounded-pill btn btn-outline-primary mb-3" role="button"><- Return to Task Register</a>
+<h1>Task Details</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul class=flashes>
+            {% for category, message in messages %}
+                <center class="alert alert-{{ category }}">{{ message }}</center>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<div>
+    <form method="post" action="{{ url_for('forms.task_details', task_id=details.id) }}">
+        <div>
+            <div class="d-flex mb-2">
+                <div class="me-2">
+                    <label class="form-label">Sender: </label>
+                    <select class="form-select" name="sender" aria-label="Select Sender">
+                        <option selected>{{ details.sender }}</option>
+                        {% for user in users %}
+                            <option value="{{user.id}}">{{user.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label">Recipient: </label>
+                    <select class="form-select" name="recipient" aria-label="Select Sender">
+                        <option selected>{{ details.recipient }}</option>
+                        {% for user in users %}
+                            <option value="{{user.id}}">{{user.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Subject: </label>
+                <input type="text" value="{{ details.subject }}" class="form-control" name="subject" id="subject" aria-describedby="subject">
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Description: </label>
+                <textarea class="form-control" name="description" id="description" aria-describedby="description">{{ details.description }}</textarea>
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Urgency: </label>
+                <select class="form-select" name="urgency" aria-label="Select Urgency">
+                    <option selected>{{ details.urgency }}</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                </select>
+            </div>
+            <div class="d-flex mb-3">
+                <div class="me-2">
+                    <label class="form-label me-1">Date Created: </label>
+                    <input type="date" value="{{ dates.date_created }}" class="form-control" name="date_created" id="date_created" aria-describedby="date_created">
+                </div>
+                <div>
+                    <label class="form-label me-1">Date Required: </label>
+                    <input type="date" value="{{ dates.date_required }}" class="form-control" name="date_required" id="date_required" aria-describedby="date_required">
+                </div>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" name="task_completed" type="checkbox" value="checked" id="flexCheckDefault" {%if details.date_completed is not none %} checked {% endif %}>
+                <label class="form-check-label" for="flexCheckDefault">
+                    Task complete
+                </label>
+                {%if details.date_completed is not none %}
+                    <label class="form-check-label" for="flexCheckDefault">
+                        (Completed: {{ details.date_completed }})
+                    </label>
+                {% endif %}
+            </div>
+            <div class="d-flex">
+                <div>
+                    <input class="rounded-pill btn btn-primary" type="submit" value="Submit Changes">
+                </div>
+            </div>
+        </div>
+    </form>
+    <form action="{{ url_for('forms.delete_task') }}" method="post" class="mt-2">
+        <div>
+            <input type="hidden" value="{{details.id}}" name="delete_task_button">
+            <input class="rounded-pill btn btn-danger" type="submit" value="Delete Task">
+        </div>
+    </form>
+</div>
+
+{% endblock %}

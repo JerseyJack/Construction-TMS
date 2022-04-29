@@ -2,7 +2,7 @@ import datetime
 import random
 from faker import Faker
 from sqlalchemy import ForeignKey, or_, func
-from sqlalchemy.orm import foreign
+from sqlalchemy.orm import foreign, aliased
 from sqlalchemy.sql.functions import Function
 
 from app import db
@@ -113,7 +113,3 @@ def delete_all_rows():
     print(f'Deleted all users from database.')
     Task.query.delete()
     print(f'Deleted all tasks from database.')
-
-
-
-

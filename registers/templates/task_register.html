@@ -11,6 +11,16 @@
     }
 </style>
 
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul class=flashes>
+            {% for category, message in messages %}
+                <center class="alert alert-{{ category }}">{{ message }}</center>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
 <h1>Task Register</h1>
 <br>
 <div style="width:100%">
@@ -25,7 +35,7 @@
                 <th>Sender</th>
                 <th>Date Created</th>
                 <th>Date Required</th>
-                <th>Date Responded</th>
+                <th>Date Completed</th>
             </tr>
         </thead>
         <tbody>
@@ -37,7 +47,7 @@
 {% block scripts %}
     <script>
         $(document).ready(function(){
-            $.fn.dataTable.moment( 'DD/MM/YYYY HH:mm' );
+            $.fn.dataTable.moment( 'DD/MM/YYYY' );
             $('#data').DataTable({
                 columnDefs:[{targets:2,className:"truncate"}],
                 createdRow: function(row) {
@@ -47,17 +57,19 @@
                 ajax: '/api/data',
                 serverSide: true,
                 columns: [
-                    {data:'id'},
+                    {data:'id', render: function ( data, type, row, meta) {
+                        return '<a href="{{ url_for('forms.task_details', task_id=id) }}">' + data + '</a>';
+                    }},
                     {data:'subject'},
                     {data:'description', orderable:false},
                     {data:'urgency'},
                     {data:'recipient'},
                     {data:'sender'},
                     {data:'date_created', render: function (data, type, row) {
-                            return moment(new Date(data).toString()).format('DD/MM/YYYY HH:mm');
+                            return moment(new Date(data).toString()).format('DD/MM/YYYY');
                     }},
                     {data:'date_required', render: function (data, type, row) {
-                            return moment(new Date(data).toString()).format('DD/MM/YYYY HH:mm');
+                            return moment(new Date(data).toString()).format('DD/MM/YYYY');
                     }},
                     {data:'date_completed'}
                 ],
