@@ -84,16 +84,17 @@ def task_details(task_id):
 
             db.session.commit()
             flash('Task successfully updated', 'success')
-            return redirect(url_for('forms.task_details', task_id=task_id))
+            return redirect(url_for('forms.task_register'))
         except:
             flash('Something went wrong adding a task. Please try again', 'danger')
             return redirect(url_for('forms.task_details', task_id=task_id))
     return render_template('task_details.html', users=user_query, details=query.first(), dates=dates)
 
-@forms.route('/delete_task', methods=['POST'])
+@forms.route('/delete_task', methods=['POST', 'GET'])
 def delete_task():
     task_id = request.form['delete_task_button']
-    deleted_task = db.Task.delete().where(Task.id == task_id)
-    deleted_task.execute()
+    task_query = db.session.query(Task).filter(Task.id == task_id).first()
+    db.session.delete(task_query)
+    db.session.commit()
     flash('Task successfully deleted', 'success')
     return redirect(url_for('registers.task_register'))

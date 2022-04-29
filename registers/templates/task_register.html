@@ -24,7 +24,7 @@
 <h1>Task Register</h1>
 <br>
 <div style="width:100%">
-    <table id="data" class="table table-striped table-bordered table-hover table-responsive-xxl display nowrap" style="width:100%">
+    <table id="data" class="table table-striped table-bordered table-hover table-responsive-xxl display responsive nowrap" style="width:100%">
         <thead>
             <tr>
                 <th>Task ID</th>
@@ -49,16 +49,27 @@
         $(document).ready(function(){
             $.fn.dataTable.moment( 'DD/MM/YYYY' );
             $('#data').DataTable({
-                columnDefs:[{targets:2,className:"truncate"}],
+                columnDefs:[
+                    {
+                        targets : 2,
+                        className : "truncate"
+                    }
+                ],
                 createdRow: function(row) {
                     var td = $(row).find(".truncate");
                     td.attr("title", td.html());
                 },
+                responsive: {
+                    breakpoints: [{ name: 'desktop', width: Infinity },
+                                  { name: 'tablet',  width: 1024 },
+                                  { name: 'fablet',  width: 768 },
+                                  { name: 'phone',   width: 480 }]
+                },
                 ajax: '/api/data',
                 serverSide: true,
                 columns: [
-                    {data:'id', render: function ( data, type, row, meta) {
-                        return '<a href="{{ url_for('forms.task_details', task_id=id) }}">' + data + '</a>';
+                    {data:'id', render: function (data, type, row, meta) {
+                        return '<a href="{{ url_for('forms.task_details', task_id=' + data + ') }}">' + data + '</a>';
                     }},
                     {data:'subject'},
                     {data:'description', orderable:false},
