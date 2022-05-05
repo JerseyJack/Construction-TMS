@@ -46,9 +46,6 @@ def task_details(task_id):
                             .join(recipient_user, recipient_user.id == Task.recipient_id) \
                             .join(sender_user, sender_user.id == Task.sender_id)\
                             .filter(Task.id == task_id)
-    print("Query:")
-    print(query.first())
-    print("^^^")
     dates = {
         'date_created' : datetime.strftime(query.first().date_created, '%Y-%m-%d'),
         'date_required': datetime.strftime(query.first().date_required, '%Y-%m-%d')
@@ -56,18 +53,8 @@ def task_details(task_id):
     if request.method == 'POST':
         try:
             task_query = db.session.query(Task).filter(Task.id == task_id).first()
-            date_created = datetime.fromtimestamp(mktime(strptime(request.form['date_created'], '%Y-%m-%d')))
-            date_required = datetime.fromtimestamp(mktime(strptime(request.form['date_required'], '%Y-%m-%d')))
-
-            print("=======================")
-            print(request.form['sender'])
-            print(request.form['recipient'])
-            print(request.form['subject'])
-            print(request.form['description'])
-            print(request.form['urgency'])
-            print(date_created)
-            print(datetime.now())
-            print("=======================")
+            #date_created = datetime.fromtimestamp(mktime(strptime(request.form['date_created'], '%Y-%m-%d')))
+            #date_required = datetime.fromtimestamp(mktime(strptime(request.form['date_required'], '%Y-%m-%d')))
 
             task_query.sender_id = request.form['sender']
             task_query.request_id = request.form['recipient']
