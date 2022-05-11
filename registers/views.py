@@ -3,14 +3,28 @@ from sqlalchemy.orm import aliased
 from registers.models import Task, User, delete_all_rows, create_fake_data
 from app import db
 
+# Register blueprint
 registers = Blueprint('registers', __name__, template_folder='templates')
 
 @registers.route('/task_register')
 def task_register():
+    """
+    This function will render the task register page.
+    :return: render_template
+    """
     return render_template('task_register.html', title='Task Register')
 
 @registers.route('/api/data')
 def task_data():
+    """
+    This function is called when the Ajax request is made for data on the task
+    register screen. It first querys the database to get all tasks and joins it
+    with the user table. Then determines what data can be searched for or sorted
+    as well as how to paginate the table. It returns the data and filtered data
+    in a dictionary that can be read by Datatables.js in the front end.
+    :return: data
+    """
+
     # Use these when you want to delete all or create new data
     # delete_all_rows()
     # create_fake_data()
