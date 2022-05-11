@@ -9,9 +9,6 @@ registers = Blueprint('registers', __name__, template_folder='templates')
 def task_register():
     return render_template('task_register.html', title='Task Register')
 
-# Credit: Miguel Grinberg for tutorial on Flask Data Tables
-# https://blog.miguelgrinberg.com/post/beautiful-interactive-tables-for-your-flask-templates
-
 @registers.route('/api/data')
 def task_data():
     # Use these when you want to delete all or create new data

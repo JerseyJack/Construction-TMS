@@ -27,7 +27,7 @@ def create_task():
             db.session.add(task)
             db.session.commit()
             flash('Task added successfully', 'success')
-            return redirect(url_for('forms.create_task'))
+            return redirect(url_for('registers.task_register'))
         except:
             flash('Something went wrong adding a task. Please try again', 'danger')
             return render_template('task_creation.html', users=user_query)
@@ -50,9 +50,15 @@ def task_details(task_id):
         'date_created' : datetime.strftime(query.first().date_created, '%Y-%m-%d'),
         'date_required': datetime.strftime(query.first().date_required, '%Y-%m-%d')
     }
+    return render_template('task_details.html', users=user_query, details=query.first(), dates=dates)
+
+@forms.route('/update_task', methods=['POST', 'GET'])
+def update_task():
+    task_id = request.form['update_task_button']
+    task_query = db.session.query(Task).filter(Task.id == task_id).first()
+    print(task_query)
     if request.method == 'POST':
         try:
-            task_query = db.session.query(Task).filter(Task.id == task_id).first()
             #date_created = datetime.fromtimestamp(mktime(strptime(request.form['date_created'], '%Y-%m-%d')))
             #date_required = datetime.fromtimestamp(mktime(strptime(request.form['date_required'], '%Y-%m-%d')))
 
@@ -65,17 +71,16 @@ def task_details(task_id):
             task_query.date_required = datetime.now() #date_required
 
             # Check task completion
-            #completed = request.form.getlist('task_completed')
-            #if completed == 'checked' and task_query.date_completed is None:
-            #    task_query.date_completed = datetime.now()
+            completed = request.form.getlist('task_completed')
+            if completed == 'checked' and task_query.date_completed is None:
+                task_query.date_completed = datetime.now()
 
-            db.session.commit()
+            #db.session.commit()
             flash('Task successfully updated', 'success')
-            return redirect(url_for('forms.task_register'))
+            return redirect(url_for('forms.task_details', task_id=task_id))
         except:
             flash('Something went wrong adding a task. Please try again', 'danger')
             return redirect(url_for('forms.task_details', task_id=task_id))
-    return render_template('task_details.html', users=user_query, details=query.first(), dates=dates)
 
 @forms.route('/delete_task', methods=['POST', 'GET'])
 def delete_task():
